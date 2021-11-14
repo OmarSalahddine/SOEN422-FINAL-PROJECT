@@ -7,6 +7,8 @@
 
 #define nBuffers  3
 #define BufferMax 40
+#define BaudRate9600 ((uint16_t)(103))
+static bool initialized;
 
 // buffer[0] is the test name.
 // buffer[1] is the expected output.
@@ -68,3 +70,30 @@ void PutX8(uint8_t b) {
 void PutX16(uint16_t w) {
     // Your code...
 }
+
+char bsl_Uart_RxChar(void) {
+
+  while(!(UCSR0A & (1 << RXC0))){}
+
+    // return data
+    return (char) UDR0;
+}
+
+char bsl_Uart_TxChar(char c) {
+
+  while(!(UCSR0A & (1 << UDRE0))){}
+
+    // return data
+    UDR0 = c;
+}
+
+void bsl_Uart_Init(void) {
+	if (!initialized) { // To make sure it will be done only once.
+
+	    // Set baud rate
+	    UBRR0 = BaudRate9600;
+	    
+	    // Turn on the receiver for UART
+	    UCSR0B = (1<<RXEN0)|(1<<TXEN0);
+	    UCSR0C = (1<<UCSZ01)|(1<<UCSZ00);
+}}
