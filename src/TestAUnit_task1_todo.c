@@ -21,7 +21,7 @@ typedef void (*TestEntry)(void);
 
 #define TestMax  4  // Up to 9.
 
-static TestEntry  tests[TestMax] = {
+static TestEntry tests[TestMax] = {
     Test1,
     Test2,
 //  Test3,
@@ -40,15 +40,23 @@ int main(void) {
 
     PutS("Test AUnit on Arduino Nano v1.0\n");
     PutS("Usage: Enter <n> where n is the test number 1..");
-    PutX4(TestMax); PutS(" or '0' (zero) to quit.\n");
-
-    while (testRun) {
-        PutS("$ ");
-        char cmd = GetC();
-
-        // Your code...
-
+    PutX4(TestMax); 
+    PutS(" or '0' (zero) to quit.\n");
+    PutS("$ ");
+    while(true){
+     char cmd = GetC();
+     switch(cmd){
+     case '1':
+      putBuffer(1);
+      break;
+     case '2':
+      Test2();
+      break;
+     default:
+      PutS("Test does not exist");
+      break;
+     }
     }
-    PutS("bye!\n");
+
     return 0;
 }
