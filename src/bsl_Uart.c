@@ -1,5 +1,5 @@
 // bsl_UsartByPolling.c
-#include "bsl_Usart.h" // Share the same interface (polling vs interrupts).
+#include "bsl_Uart.h" // Share the same interface (polling vs interrupts).
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #define BaudRate9600 ((uint16_t)(103))
