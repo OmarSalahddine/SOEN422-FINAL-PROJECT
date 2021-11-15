@@ -42,6 +42,33 @@ static void __putchar(char c) {
     putBuffer(c);
 }
 
+char * decToHexa(uint16_t n)
+{
+    // char array to store hexadecimal number
+    static char hexaDeciNum[100];
+ 
+    // counter for hexadecimal number array
+    uint16_t i = 0;
+    while (n != 0) {
+        // temporary variable to store remainder
+        uint16_t int temp = 0;
+ 
+        // storing remainder in temp variable.
+        temp = n % 16;
+ 
+        // check if temp < 10
+        if (temp < 10) {
+            hexaDeciNum[i] = temp + 48;
+            i++;
+        }
+        else {
+            hexaDeciNum[i] = temp + 55;
+            i++;
+        }
+ 
+        n = n / 16;
+}
+
 #define getchar()  bsl_Uart_RxChar()
 
 void PutC(char c)        { __putchar(c); }
@@ -54,17 +81,17 @@ char GetC(void)          { return getchar(); }
  * PutX4 - PutHexNibble - print a nibble as an hex digit character.
  *-------------------------------------------------------------------------*/
 void PutX4(uint8_t n) {
-    // Your code...
+    PutS(decToHexa(n));
 }
 /*---------------------------------------------------------------------------
  * PutX8 - PutHexByte - print a byte (uint8_t) as two hex digit characters.
  *-------------------------------------------------------------------------*/
 void PutX8(uint8_t b) {
-    // Your code...
+    PutS(decToHexa(b));
 }
 /*---------------------------------------------------------------------------
  * PutX16 - PutHexWord - print a word (uint16_t) as four hex digit characters.
  *-------------------------------------------------------------------------*/
 void PutX16(uint16_t w) {
-    // Your code...
+    PutS(decToHexa(w));
 }
