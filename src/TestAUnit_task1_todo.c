@@ -1,38 +1,36 @@
 // TestAUnit_task1_todo.c - Test AUnit for Arduino Nano.
 
 #include "COutForAUnit.h"
-#include "bsl_Usart.h"
+
+#include "bsl_Uart.h"
 
 #include <stdint.h>
+
 #include <stdbool.h>
 
 static void Test1(void) {
-    PutS("Test 1 - Test Number one\n");
-    PutS("1\n"); // Expected output
-    PutS("1\n"); // Current output
+  PutS("Test 1 - Test Number one\n");
+  PutS("1\n"); // Expected output
+  PutS("1\n"); // Current output
 }
 
 static void Test2(void) {
-    PutS("Test 2 - Test Number two\n");
-    PutS("23\n"); // Expected output
-    PutS("24\n"); // Current output
+  PutS("Test 2 - Test Number two\n");
+  PutS("23\n"); // Expected output
+  PutS("24\n"); // Current output
 }
 
-static void Test3(void) {
+typedef void( * TestEntry)(void);
 
-}
+#define TestMax 4 // Up to 9.
 
-typedef void (*TestEntry)(void);
-
-#define TestMax  4  // Up to 9.
-
-static TestEntry  tests[TestMax] = {
-    Test1,
-    Test2,
-//  Test3,
-//  Test4,
-//  ...
-//  Test9
+static TestEntry tests[TestMax] = {
+  Test1,
+  Test2,
+  //  Test3,
+  //  Test4,
+  //  ...
+  //  Test9
 };
 
 /*-------------------------------------------------------------------
@@ -54,13 +52,12 @@ int main(void) {
      case '1':
       Test1();
       break;
-     case '2':
+    case '2':
       Test2();
       break;
-     default:
+    default:
       PutS("Test does not exist");
       break;
-     }
     }
     PutS("bye!\n");
     return 0;
