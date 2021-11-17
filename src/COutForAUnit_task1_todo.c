@@ -114,7 +114,7 @@ char bsl_Uart_RxChar(void) {
     return (char) UDR0;
 }
 
-char bsl_Uart_TxChar(char c) {
+void bsl_Uart_TxChar(char c) {
 
   while(!(UCSR0A & (1 << UDRE0))){}
 
@@ -131,4 +131,5 @@ void bsl_Uart_Init(void) {
 	    // Turn on the receiver for UART
 	    UCSR0B = (1<<RXEN0)|(1<<TXEN0);
 	    UCSR0C = (1<<UCSZ01)|(1<<UCSZ00);
-}}
+    }
+}
