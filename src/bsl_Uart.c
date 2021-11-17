@@ -2,6 +2,8 @@
 #include "bsl_Uart.h" // Share the same interface (polling vs interrupts).
 #include <avr/io.h>
 #include <avr/interrupt.h>
+#include <stdbool.h>
+#include<stdio.h>
 #define BaudRate9600 ((uint16_t)(103))
 static bool initialized = false;
 //------------------------------------------------------------------------

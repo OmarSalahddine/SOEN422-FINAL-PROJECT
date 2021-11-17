@@ -1,8 +1,7 @@
 #include "DumpMemory.h"
-#include <util/delay.h>
-#include <stdbool.h>
 #if !defined(Host)
-#include "bsl_Usart.h"
+#include "bsl_Uart.h"
+#include <stdbool.h>
 #endif
 /*-------------------------------------------------------------------
 * main
