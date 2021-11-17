@@ -9,8 +9,9 @@ PutX8(*from);
 *from++;
 i++;
 PutS(" ");
+
+if(i == (nBytes/2)){PutN();}
 }
 PutN();
 }
 
-}
