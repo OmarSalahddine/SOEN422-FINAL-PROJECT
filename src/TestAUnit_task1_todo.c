@@ -8,6 +8,17 @@
 
 #include <stdbool.h>
 
+#include <util/delay.h>
+
+static void result(void){
+if(Equals()){
+PutC('.');
+} 
+
+else {PutC('F');}
+
+}
+
 static void Test1(void) {
   PutS("Test 1 - Test Number one\n");
   PutS("1\n"); // Expected output
@@ -39,6 +50,7 @@ static TestEntry tests[TestMax] = {
 int main(void) {
     bsl_Uart_Init();
 
+
     bool testRun = true;
 
     PutS("Test AUnit on Arduino Nano v1.0\n");
@@ -46,7 +58,8 @@ int main(void) {
     PutX4(TestMax); 
     PutS(" or '0' (zero) to quit.\n");
     PutS("$ ");
-    while(true){
+    initialize();
+    while(testRun){
      char cmd = GetC();
      switch(cmd){
      case '1':
@@ -55,10 +68,11 @@ int main(void) {
     case '2':
       Test2();
       break;
-    default:
-      PutS("Test does not exist");
-      break;
     }
+    result();
+    ResetBuffer();
+   }
+
     PutS("bye!\n");
     return 0;
 }

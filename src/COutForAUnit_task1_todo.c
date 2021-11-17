@@ -3,12 +3,12 @@
 
 #include <string.h>
 #include "COutForAUnit.h"
-#include "bsl_Usart.h"
+#include "bsl_Uart.h"
 
 #define nBuffers 3
 #define BufferMax 40
 #define BaudRate9600 ((uint16_t)(103))
-static bool initialized;
+static bool initialized = false;
 
 // buffer[0] is the test name.
 // buffer[1] is the expected output.
@@ -18,67 +18,73 @@ static char buffer[nBuffers][BufferMax];
 static uint8_t n = 0;
 static uint8_t bufferNum = 0; // based on the newline detected.
 static bool overflow = false;
+static uint16_t size = 0;
+
+void initialize(void){
+initialized = true;
+}
 
 bool Equals(void)
 {
-    if (overflow)
-        return false;
+    if (overflow) {return false;}
 
-    if(buffer[1] == buffer[2])
-        return true;
-    else 
-        return false;
+
+    for(uint16_t i = 0; i < size; i++){
+    if(buffer[1][i] != buffer[2][i]){return false;}
+    }
+
+    return true;
+}
+
+void printBuffer(void){
+for(int i = 0; i < 3; i++){
+ for(int j = 0; j < (sizeof(buffer[i])/sizeof(buffer[i][0])); j++){
+    bsl_Uart_TxChar(buffer[i][j]);
+  }
+ }
 }
 
 void ResetBuffer(void)
 {
-    // deallocate memory from each array element.
-    for (uint8_t i = 0; i < nBuffers; i++) {
-        free(buffer[i]);
-    }
-    // delete the array. (not sure if needed)
-    free(buffer);
+for(int i = 0; i < 3; i++){
+ for(int j = 0; j < (sizeof(buffer[i])/sizeof(buffer[i][0])); j++){
+    buffer[i][j] = (char) 0;
+  }
+ }
+
+    size = 0;
+    bufferNum = 0;
+    n = 0;
+    overflow = false;
 }
 
 static void putBuffer(char c)
 {
-    // Your code...
+
+if(c == '\n'){
+bufferNum++;
+n = 0;
+}
+
+uint16_t bufferN = bufferNum%3;
+
+buffer[bufferN][n] = c;
+
+if(bufferN == 2){
+size++;
+} 
+
+if(n < BufferMax){n++;}
+else {overflow = true;}
 }
 
 // AUnit's putchar to store output characters in AUnit's buffers.
 static void __putchar(char c)
 {
     bsl_Uart_TxChar(c);
-}
-char *decToHexa(uint16_t n)
-{
-    // char array to store hexadecimal number
-    static char hexaDeciNum[100];
-
-    // counter for hexadecimal number array
-    uint16_t i = 0;
-    while (n != 0)
-    {
-        // temporary variable to store remainder
-        uint16_t temp = 0;
-        // storing remainder in temp variable.
-        temp = n % 16;
-
-        // check if temp < 10
-        if (temp < 10)
-        {
-            hexaDeciNum[i] = temp + 48;
-            i++;
-        }
-        else
-        {
-            hexaDeciNum[i] = temp + 55;
-            i++;
-        }
-
-        n = n / 16;
-    } 
-    return hexaDeciNum;
+    if(initialized == true){
+    putBuffer(c);
+    }
 }
 
 #define getchar() bsl_Uart_RxChar()
@@ -151,31 +157,3 @@ void PutX16(uint16_t w)
 {
     PutS(decToHexa(w));
 }
-
-// char bsl_Uart_RxChar(void) {
-
-//   while(!(UCSR0A & (1 << RXC0))){}
-
-//     // return data
-//     return (char) UDR0;
-// }
-
-// void bsl_Uart_TxChar(char c) {
-
-//   while(!(UCSR0A & (1 << UDRE0))){}
-
-//     // return data
-//     UDR0 = c;
-// }
-
-// void bsl_Uart_Init(void) {
-// 	if (!initialized) { // To make sure it will be done only once.
-
-// 	    // Set baud rate
-// 	    UBRR0 = BaudRate9600;
-	    
-// 	    // Turn on the receiver for UART
-// 	    UCSR0B = (1<<RXEN0)|(1<<TXEN0);
-// 	    UCSR0C = (1<<UCSZ01)|(1<<UCSZ00);
-//     }
-// }
