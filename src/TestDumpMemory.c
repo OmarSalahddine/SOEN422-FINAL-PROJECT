@@ -21,7 +21,7 @@ int main(void)
         PutN();
         PutS("$");
         char cmd = GetC();
-        PutN();
+        // PutN();
         switch (cmd)
         {
         case 'm':
