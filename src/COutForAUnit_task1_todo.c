@@ -3,7 +3,7 @@
 
 #include <string.h>
 #include "COutForAUnit.h"
-#include "bsl_Uart.h"
+#include "bsl_Usart.h"
 
 #define nBuffers  3
 #define BufferMax 40
@@ -17,13 +17,8 @@ static uint8_t  n = 0;
 static uint8_t  bufferNum = 0; // based on the newline detected.
 static bool     overflow = false;
 
-void _PutS(const char* s) { while (*s) bsl_Uart_TxChar(*s++); }
-
 bool Equals(void) {
     if (overflow) return false;
-
-    // Comparing expected and current outputs.
-    // Your code...
 
     return false;
 }
@@ -51,7 +46,7 @@ char * decToHexa(uint16_t n)
     uint16_t i = 0;
     while (n != 0) {
         // temporary variable to store remainder
-        uint16_t int temp = 0;
+        uint16_t temp = 0;
  
         // storing remainder in temp variable.
         temp = n % 16;
@@ -67,6 +62,9 @@ char * decToHexa(uint16_t n)
         }
  
         n = n / 16;
+   }
+   
+   return hexaDeciNum;
 }
 
 #define getchar()  bsl_Uart_RxChar()
