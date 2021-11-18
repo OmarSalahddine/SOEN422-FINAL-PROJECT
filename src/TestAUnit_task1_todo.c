@@ -33,7 +33,7 @@ static void Test2(void) {
 
 typedef void( * TestEntry)(void);
 
-#define TestMax 4 // Up to 9.
+#define TestMax 2 // Up to 9.
 
 static TestEntry tests[TestMax] = {
   Test1,
@@ -50,30 +50,40 @@ static TestEntry tests[TestMax] = {
 int main(void) {
     bsl_Uart_Init();
 
-
     bool testRun = true;
 
     PutS("Test AUnit on Arduino Nano v1.0\n");
     PutS("Usage: Enter <n> where n is the test number 1..");
     PutX4(TestMax); 
     PutS(" or '0' (zero) to quit.\n");
-    PutS("$ ");
-    initialize();
+    PutN();
     while(testRun){
-     char cmd = GetC();
-     switch(cmd){
+    PutS("$ ");
+    char cmd = GetC();
+    PutC(cmd);
+    PutN();
+    ResetBuffer();
+    switch(cmd){
      case '1':
       Test1();
       break;
-    case '2':
+     case '2':
       Test2();
       break;
-    case '0':
-    PutS("\nbye!");
-    break;
+     case '0':
+      testRun = false;
+      break;
+     case '\n':
+      break;
+     default:
+      PutS("Test not provided");
+      break;
     }
     result();
+    PutN();
     ResetBuffer();
    }
+
+    PutS("bye!\n");
     return 0;
 }
