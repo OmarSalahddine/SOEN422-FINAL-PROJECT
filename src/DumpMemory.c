@@ -5,16 +5,19 @@
 #include "bsl_Uart.h"
 #endif
 
-void DumpMemory(uint8_t *from, uint16_t nBytes)
+void DumpMemory(uint8_t* from, uint16_t nBytes)
 {
-    int i = 0;
-    while (i < nBytes)
+    for(uint8_t i = 0; i < nBytes; i++)
     {
-        PutX4(from);
+        if(i%16==0){
+          if(i!=0){
+          PutN();
+          }
+          PutX16(from);
+        } else {
+          PutS(" ");
+          PutX8(*from);
+        }
         from++;
-        i++;
-        if (i != nBytes)
-            PutN();
     }
 }
-

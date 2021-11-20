@@ -56,7 +56,6 @@ int main(void) {
     PutS("Usage: Enter <n> where n is the test number 1..");
     PutX4(TestMax); 
     PutS(" or '0' (zero) to quit.\n");
-    PutN();
     while(testRun){
     PutS("$ ");
     char cmd = GetC();

@@ -25,12 +25,15 @@ int main(void)
     };
 
     PutS("Usage: type 'm'(memory) and 'q' to quit");
+    PutN();
+    PutS("$ ");
     while (run)
     {
-        PutN();
-        PutS("$ ");
         char cmd = GetC();
-        // PutN();
+        #if !defined(Host)
+        PutC(cmd);
+        PutN();
+        #endif
         switch (cmd) {
         case 'm':
             #if !defined(Host)
@@ -42,14 +45,15 @@ int main(void)
         case 'q':
             PutS("bye!");
             run = false;
-            break;
+            continue;
         case '\n':
-            break;
+            continue;
         default: 
             PutS("Invalid command");
             break;
         }
+        PutN();
+        PutS("$ ");
     }
-
     return 0;
 }
