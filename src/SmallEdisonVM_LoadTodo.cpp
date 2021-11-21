@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>     // string
+#include <COutForAUnit.h>
 
 class Task {
 public:
@@ -165,14 +166,23 @@ public:
     }
 
     void load(FILE* input) {
-        int i = ip = pe;
+         int i = ip = pe;
         char line[10];
         int code;
 
-        // Your code...
+        uint16_t size = 4;
+        uint16_t item;
+        uint16_t count = 0;
 
+        while(strcmp(line, "\n") != 0)
+        {
+            fgets(line, size, input);
+            item = atoi(line);
+            memory[count] = item;
+            count++;
+        }
         fclose(input);
-//t        printf("\n%d words loaded.\n", i - pe);
+        PutS("words loaded.\n" + (i - pe));
     }
 
     void run() {
