@@ -5,7 +5,8 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>     // string
-#include <COutForAUnit.h>
+#include <ctype.h>
+#include "COutForAUnit.h"
 
 class Task {
 public:
@@ -129,7 +130,7 @@ private:
     int taskProgTop;     // progTop
 
     const int MIN_ADDRESS = 0;
-    const int MAX_ADDRESS = 20000;
+    const int MAX_ADDRESS = 1000;
     const int SPACE = (int)(' ');
     const int INSTR_TABLE = 400;
     const int SET_LENGTH = 0x8;
@@ -166,29 +167,27 @@ public:
     }
 
     void load(FILE* input) {
-         int i = ip = pe;
+        int i = ip = pe;
         char line[10];
-        int code;
+        int8_t code;
 
         uint16_t size = 4;
-        uint16_t item;
-        uint16_t count = 0;
 
-        while(strcmp(line, "\n") != 0)
+        while(fgets(line, size, input) != NULL)
         {
-            fgets(line, size, input);
-            item = atoi(line);
-            memory[count] = item;
-            count++;
+            code = atoi(line);
+            if(code == 0 && line[0] != '0'){continue;}
+            memory[i] = code;
+            i++;
         }
+
         fclose(input);
-        PutS("words loaded.\n" + (i - pe));
     }
 
     void run() {
         int opcode = 0;
         while(true) {
-//t            printf("ip=%02x opcode=%d", (ip-1024), opcode));
+            //printf("ip=%02x opcode=%d", (ip-1024), opcode);
             switch((opcode=memory[ip++])-INSTR_TABLE) {
                 case ENDPROC:           EndProc();     break;
                 case PROCEDURE:         Procedure();   break;
@@ -1136,7 +1135,7 @@ static void usage() {
     exit(1);
 }
 
-#if Nano
+#if defined(Nano)
 int main() {
 #else
 int main(int argc, char** args) {
@@ -1145,7 +1144,7 @@ int main(int argc, char** args) {
 
     char  filename[32];
     strcpy(filename, args[1]);   // Save name and extension.
-//tt    printf("Filename: '%s'\n", filename);
+    printf("Filename: '%s'\n", filename);
 
     FILE* file = fopen(filename, "r" );
     if (file == NULL) {
