@@ -130,7 +130,7 @@ private:
     int taskProgTop;     // progTop
 
     const int MIN_ADDRESS = 0;
-    const int MAX_ADDRESS = 1000;
+    const int MAX_ADDRESS = 100;
     const int SPACE = (int)(' ');
     const int INSTR_TABLE = 400;
     const int SET_LENGTH = 0x8;
@@ -169,16 +169,16 @@ public:
     void load(FILE* input) {
         int i = ip = pe;
         char line[10];
-        int8_t code;
+        uint16_t code;
+        uint16_t count = 0;
 
-        uint16_t size = 4;
+        int8_t size = 4;
 
         while(fgets(line, size, input) != NULL)
         {
             code = atoi(line);
             if(code == 0 && line[0] != '0'){continue;}
-            memory[i] = code;
-            i++;
+            memory[i++] = code;
         }
 
         fclose(input);
