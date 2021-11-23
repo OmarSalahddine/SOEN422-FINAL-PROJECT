@@ -166,7 +166,7 @@ public:
     }
 
     void load(FILE* input) {
-        int i = ip = pe;
+        int16_t i = ip = pe;
         char line[10];
         int16_t code;
 
@@ -175,9 +175,7 @@ public:
         while(fgets(line, size, input) != NULL)
         {
             code = atoi(line);
-            #if define(Linux)
             if(code == 0 && line[0] != '0'){continue;}
-            #endif
             memory[i++] = code;
         }
 
@@ -1144,7 +1142,6 @@ int main(int argc, char** args) {
 
     char  filename[32];
     strcpy(filename, args[1]);   // Save name and extension.
-    printf("Filename: '%s'\n", filename);
 
     FILE* file = fopen(filename, "r" );
     if (file == NULL) {
