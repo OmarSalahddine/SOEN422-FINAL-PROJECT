@@ -6,7 +6,6 @@
 #include <stdint.h>
 #include <string.h>     // string
 #include <ctype.h>
-#include "COutForAUnit.h"
 
 class Task {
 public:
@@ -130,7 +129,7 @@ private:
     int taskProgTop;     // progTop
 
     const int MIN_ADDRESS = 0;
-    const int MAX_ADDRESS = 100;
+    const int MAX_ADDRESS = 20000;
     const int SPACE = (int)(' ');
     const int INSTR_TABLE = 400;
     const int SET_LENGTH = 0x8;
@@ -169,15 +168,16 @@ public:
     void load(FILE* input) {
         int i = ip = pe;
         char line[10];
-        uint16_t code;
-        uint16_t count = 0;
+        int16_t code;
 
-        int8_t size = 4;
+        int8_t size = 5;
 
         while(fgets(line, size, input) != NULL)
         {
             code = atoi(line);
+            #if define(Linux)
             if(code == 0 && line[0] != '0'){continue;}
+            #endif
             memory[i++] = code;
         }
 
