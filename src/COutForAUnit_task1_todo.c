@@ -94,6 +94,7 @@ void PutS(const char *s)
 {
     while (*s) PutC(*s++);
 }
+
 void PutN(void) { PutC('\n'); }
 
 char GetC(void) {
