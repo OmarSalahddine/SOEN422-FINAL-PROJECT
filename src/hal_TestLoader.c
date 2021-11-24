@@ -3,8 +3,9 @@
 #include "bsl_Uart.h"
 #include "hal_Loader.h"
 #include "vm.h"
+#include <stdbool.h>
 
-...
+//...
 
 #define Target "(ATMega328P)"
 #define VMName "Small Edison Virtual Machine "
@@ -13,9 +14,9 @@
 #define Version " v1.0 "
 #define Copyright "Copyright (c) 2021  Michel de Champlain"
 
-    // Banner = VMname AppSuffix Version Copyright
-    static void
-    DisplayBanner()
+// Banner = VMname AppSuffix Version Copyright
+static void
+DisplayBanner()
 {
     PutS(VMName);
     PutS(AppSuffix);
@@ -42,8 +43,9 @@ int main()
         if ((status = hal_Loader(mem)) == Success)
         {
             DisplayBanner();
-
-            kernel->run(mem);
+            VM_Init(mem);
+            VM_execute(mem);
+            //kernel->run(mem);
 
             // Send an Ack to tell the Host that program's execution is done.
             PutC((char)Ack);
