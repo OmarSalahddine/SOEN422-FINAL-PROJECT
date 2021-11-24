@@ -9,7 +9,8 @@
 #define Nak ((uint8_t)0x33)
 #define PacketSizeMax ((uint8_t)11)
 
-typedef enum {
+typedef enum
+{
     Success = 0x40,
     // Errors during CheckPacket():
     UnknownCmd,
@@ -23,7 +24,8 @@ typedef enum {
     ChecksumInvalid
 } Status;
 
-typedef enum {
+typedef enum
+{
     CmdBegin = 0x20,
     Ping = CmdBegin,
     Download,
@@ -34,6 +36,6 @@ typedef enum {
     CmdEnd
 } Cmd;
 
-uint8_t hal_Loader(uint8_t* mem);
+uint8_t hal_Loader(uint8_t *mem);
 
 #endif

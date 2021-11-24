@@ -1,18 +1,17 @@
 #include "hal_Loader.h"
-#include "bsl_Uart.h"
-#include "COutForAUnit.h"
 
-static char pingPacketChecksumInvalid[] = {0x03, 0xee, Ping, 0};
-static char pingPacket[] = {0x03, 0x20, Ping, 0};
-static char getStatusPacket[] = {0x03, 0x23, GetStatus, 0};
-static char sendDataPacket[] = {0x09, 0xBC, 0x24, 0x91, 0xFF, 0x82, 0xFF, 0x87, 0x00, 0};
-static char runPacket[] = {0x03, 0x22, Run, 0};
+void hal_Init()
+{
+}
 
-static bool _continue;
-static bool _run;
+uint8_t hal_Loader(uint8_t *mem)
+{
 
-static char buffer[12];
+    uint8_t result = Success;
 
-#if defined(Host)
+    // if(Condition) {
+    //     result = fail;
+    // }
 
-#endif
+    return result;
+}

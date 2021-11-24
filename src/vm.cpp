@@ -9,6 +9,7 @@
 
 #include "COutForAUnit.h"
 #include "bsl_Uart.h"
+#include "vm.h"
 
 class Task {
 public:
@@ -168,21 +169,20 @@ public:
         lineNo = 0;
     }
 
-    void load() {
+    void load(uint8_t *mem) {
         int16_t i = ip = pe;
 
-        int programfile[] = {
-          443, 1, 1, 0, 0, 406, 84, 474, 406, 101, 474, 406, 115, 474, 406, 116, 474, 406, 32, 474, 406, 102, 474, 406, 48, 474, 476, 406, 48, 474, 476, 406, 0, 473, 476, 415, 412, -1
-        };
-        
-        uint16_t size = sizeof(programfile)/sizeof(programfile[0]);
+        uint16_t size = sizeof(mem)/sizeof(mem[0]);
 
         for(uint16_t index = 0; index < size; index++){
-           memory[i++] = programfile[index];
+           memory[i++] = mem[index];
         }
     }
 
-    void run() {
+    void run(uint8_t *mem) {
+
+        load(mem);
+
         int opcode = 0;
         while(true) {
             //printf("ip=%02x opcode=%d", (ip-1024), opcode);
@@ -1123,14 +1123,16 @@ private:
 //t     printf("The program terminates.\n");
         exit(0);
     }
+
+    void VM_Init(uint8_t mem) {
+
+        bsl_Uart_Init();
+        Kernel* kernel = new Kernel();
+    }
+
+    void VM_execute(uint8_t mem) {
+
+        run(mem);
+    }
 };
 
-int main() {
-    bsl_Uart_Init();
-
-    Kernel* kernel = new Kernel();
-    kernel->load();
-    kernel->run();
-
-    return 0;
-}

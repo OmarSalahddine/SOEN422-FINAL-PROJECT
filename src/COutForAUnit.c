@@ -28,12 +28,17 @@ static uint16_t size = 0;
 
 bool Equals(void)
 {
-    if (overflow) {return false;}
+    if (overflow)
+    {
+        return false;
+    }
 
-    for(uint16_t i = 0; i < size; i++){
-     if(buffer[1][i] != buffer[2][i]){
-      return false;
-     }
+    for (uint16_t i = 0; i < size; i++)
+    {
+        if (buffer[1][i] != buffer[2][i])
+        {
+            return false;
+        }
     }
 
     return true;
@@ -41,10 +46,12 @@ bool Equals(void)
 
 void ResetBuffer(void)
 {
-    for(int i = 0; i < nBuffers; i++){
-     for(int j = 0; j < BufferMax; j++){
-      buffer[i][j] = (char) 0;
-     }
+    for (int i = 0; i < nBuffers; i++)
+    {
+        for (int j = 0; j < BufferMax; j++)
+        {
+            buffer[i][j] = (char)0;
+        }
     }
 
     size = 0;
@@ -55,56 +62,66 @@ void ResetBuffer(void)
 
 static void putBuffer(char c)
 {
-if(c == '\n'){
- bufferNum++;
- n = 0;
-}
+    if (c == '\n')
+    {
+        bufferNum++;
+        n = 0;
+    }
 
-uint16_t bufferN = bufferNum%3;
+    uint16_t bufferN = bufferNum % 3;
 
-buffer[bufferN][n] = c;
+    buffer[bufferN][n] = c;
 
-if(bufferN == 2){
- size++;
-} 
+    if (bufferN == 2)
+    {
+        size++;
+    }
 
-if(n < BufferMax){n++;}
-else {overflow = true;}
+    if (n < BufferMax)
+    {
+        n++;
+    }
+    else
+    {
+        overflow = true;
+    }
 }
 
 // AUnit's putchar to store output characters in AUnit's buffers.
 static void __putchar(char c)
 {
-    #if !defined(Host)
+#if !defined(Host)
     bsl_Uart_TxChar(c);
     putBuffer(c);
-    #else
+#else
     printf("%c", c);
-    #endif
+#endif
 }
 
 #define getchar() bsl_Uart_RxChar()
 
 void PutC(char c)
-{ 
+{
     __putchar(c);
 }
 
 void PutS(const char *s)
 {
-    while (*s) PutC(*s++);
+    while (*s)
+        PutC(*s++);
 }
 
 void PutN(void) { PutC('\n'); }
 
-char GetC(void) {
-   #if !defined(Host) 
-   return getchar(); 
-   #else
-   char getchar;
-   scanf("%c", &getchar);
-   return getchar;
-   #endif 
+char GetC(void)
+{
+#if !defined(Host)
+    return getchar();
+#else
+    char getchar;
+    scanf("%c", &getchar);
+    return getchar;
+#endif
 }
 
 /*---------------------------------------------------------------------------
@@ -113,14 +130,14 @@ char GetC(void) {
 void PutX4(uint8_t n)
 {
     n &= 0xF;
-    PutC(n>=10 ? (n-10)+'A' : n+'0');
+    PutC(n >= 10 ? (n - 10) + 'A' : n + '0');
 }
 /*---------------------------------------------------------------------------
  * PutX8 - PutHexByte - print a byte (uint8_t) as two hex digit characters.
  *-------------------------------------------------------------------------*/
 void PutX8(uint8_t b)
 {
-    PutX4(b >>  4);
+    PutX4(b >> 4);
     PutX4(b);
 }
 /*---------------------------------------------------------------------------
