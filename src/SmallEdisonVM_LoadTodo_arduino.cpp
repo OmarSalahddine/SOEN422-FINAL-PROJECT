@@ -2,10 +2,13 @@
 // Nov 9, 2021 - Michel de Champlain
 
 #include <stdlib.h>     // exit, EXIT_FAILURE
-#include <stdio.h>
 #include <stdint.h>
 #include <string.h>     // string
 #include <ctype.h>
+#include <stdio.h>
+
+#include "COutForAUnit.h"
+#include "bsl_Uart.h"
 
 class Task {
 public:
@@ -129,7 +132,7 @@ private:
     int taskProgTop;     // progTop
 
     const int MIN_ADDRESS = 0;
-    const int MAX_ADDRESS = 20000;
+    const int MAX_ADDRESS = 100;
     const int SPACE = (int)(' ');
     const int INSTR_TABLE = 400;
     const int SET_LENGTH = 0x8;
@@ -165,21 +168,18 @@ public:
         lineNo = 0;
     }
 
-    void load(FILE* input) {
+    void load() {
         int16_t i = ip = pe;
-        char line[10];
-        int16_t code;
 
-        int8_t size = 5;
+        int programfile[] = {
+          443, 1, 1, 0, 0, 406, 84, 474, 406, 101, 474, 406, 115, 474, 406, 116, 474, 406, 32, 474, 406, 102, 474, 406, 48, 474, 476, 406, 48, 474, 476, 406, 0, 473, 476, 415, 412, -1
+        };
+        
+        uint16_t size = sizeof(programfile)/sizeof(programfile[0]);
 
-        while(fgets(line, size, input) != NULL)
-        {
-            code = atoi(line);
-            if(code == 0 && line[0] != '0'){continue;}
-            memory[i++] = code;
+        for(uint16_t index = 0; index < size; index++){
+           memory[i++] = programfile[index];
         }
-
-        fclose(input);
     }
 
     void run() {
@@ -244,14 +244,17 @@ public:
                 case PUTB:              PutBoolean();   break;
                 case PUTN:              PutLine();      break;
                 default:
-                    printf("Unknown opcode=%d ip=%u\n", opcode, ip);
+                    char string[50];
+                    sprintf(string, "Unknown opcode=%d ip=%u\n", opcode, ip);
+                    PutS(string);
                     exit(1);
             }
         }
     }
 private:
     void runError(const char* msg) {
-        printf("%s\n", msg);
+        PutS(msg);
+        PutN();
         exit(1);
     }
     void preempt() {
@@ -395,7 +398,7 @@ private:
                 tempSet[index] |= (1<<val);
             }
             else
-                printf("Error: element has the value outside set range\n");
+                PutS("Error: element has the value outside set range\n");
         }
         sp = sp - number + 1;
         for (i=0; i<SET_LENGTH ; i++) {
@@ -810,13 +813,6 @@ private:
 //t        printStack();
         }
 
-    void printStack() {
-        printf("ip=%02x [", ip - 1024);
-        for (int n = 0; n < 8; n++) {
-            printf("%02x, ", memory[sp + n]);
-        }
-        printf("...\n");
-    }
     void ParamCall() {
 //t        printStack();
         int displacement = memory[ip];
@@ -1107,19 +1103,21 @@ private:
     }
     //------------------------------------------- Extras
     void PutInteger() {
-        printf("%d", memory[sp]);
+        char integer[50];
+        sprintf(integer, "%d", memory[sp]);
+        PutS(integer);
         sp = sp - 1;
     }
     void PutCharacter() {
-        printf("%c", (char)memory[sp]);
+        PutC((char)memory[sp]);
         sp = sp - 1;
     }
     void PutBoolean() {
-        printf("%s", (memory[sp] == 0) ? "false" : "true");
+        PutS((memory[sp] == 0) ? "false" : "true");
         sp = sp - 1;
     }
     void PutLine() {
-        printf("\n");
+        PutN();
     }
     void EndCode() {
 //t     printf("The program terminates.\n");
@@ -1127,30 +1125,11 @@ private:
     }
 };
 
-static void usage() {
-    printf("Small Edison VM for Arduino Nano v1.0\n");
-    printf("Usage: se <file>.pic\n");
-    exit(1);
-}
-
-#if defined(Nano)
 int main() {
-#else
-int main(int argc, char** args) {
-#endif
-    if (argc != 2) usage();
-
-    char  filename[32];
-    strcpy(filename, args[1]);   // Save name and extension.
-
-    FILE* file = fopen(filename, "r" );
-    if (file == NULL) {
-        printf("'%s' does not exist.\n", filename);
-        return -1;
-    }
+    bsl_Uart_Init();
 
     Kernel* kernel = new Kernel();
-    kernel->load(file);
+    kernel->load();
     kernel->run();
 
     return 0;
