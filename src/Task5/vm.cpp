@@ -1123,16 +1123,16 @@ private:
 //t     printf("The program terminates.\n");
         exit(0);
     }
-
-    void VM_Init(uint8_t mem) {
-
-        bsl_Uart_Init();
-        Kernel* kernel = new Kernel();
-    }
-
-    void VM_execute(uint8_t mem) {
-
-        run(mem);
-    }
 };
+
+Kernel* kernel;
+
+void VM_Init() {
+        bsl_Uart_Init();
+        kernel = new Kernel();
+}
+
+void VM_execute(uint8_t* mem) {
+        kernel->run(mem);
+}
 

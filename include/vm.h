@@ -2,6 +2,15 @@
 #include "COutForAUnit.h"
 #include "DumpMemory.h"
 
-void VM_Init();
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
+void VM_Init();
+void VM_execute(uint8_t* mem);
+
+#ifdef __cplusplus
+}
+#endif
 
