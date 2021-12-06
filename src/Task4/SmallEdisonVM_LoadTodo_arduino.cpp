@@ -132,7 +132,7 @@ private:
     uint8_t taskProgTop;     // progTop
 
     const uint8_t MIN_ADDRESS = 0;
-    const uint16_t MAX_ADDRESS = 20000;
+    const uint16_t MAX_ADDRESS = 100;
     const uint8_t SPACE = (int)(' ');
     const uint16_t INSTR_TABLE = 400;
     const uint8_t SET_LENGTH = 0x8;
@@ -186,7 +186,7 @@ public:
         int opcode = 0;
         while(true) {
             //printf("ip=%02x opcode=%d", (ip-1024), opcode);
-            switch((opcode=memory[ip++])) {
+            switch((opcode=memory[ip++]) - INSTR_TABLE) {
                 case ENDPROC:           EndProc();     break;
                 case PROCEDURE:         Procedure();   break;
                 case INDEX:             Index();       break;

@@ -186,7 +186,7 @@ public:
         int opcode = 0;
         while(true) {
             //printf("ip=%02x opcode=%d", (ip-1024), opcode);
-            switch((opcode=memory[ip++])) {
+            switch((opcode=memory[ip++]) - INSTR_TABLE) {
                 case ENDPROC:           EndProc();     break;
                 case PROCEDURE:         Procedure();   break;
                 case INDEX:             Index();       break;
