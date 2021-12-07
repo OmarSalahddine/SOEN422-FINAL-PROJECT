@@ -1,6 +1,3 @@
-// SmallEdisonVM.cpp - Implementation of the Small Edison Virtual Machine.
-// Nov 9, 2021 - Michel de Champlain
-
 #include <stdlib.h>     // exit, EXIT_FAILURE
 #include <stdint.h>
 #include <string.h>     // string
@@ -9,14 +6,13 @@
 
 #include "COutForAUnit.h"
 #include "bsl_Uart.h"
-#include "vm.h"
 
 class Task {
 public:
-    int bp;
-    int sp;
-    int pe;
-    int ip;
+    int16_t bp;
+    int16_t sp;
+    int16_t pe;
+    int16_t ip;
 
     Task() {
         bp = sp = pe = ip = 0;
@@ -25,122 +21,122 @@ public:
 
 class Kernel {
 public:
-    static const int INVALID                 = -1;
-    static const int ADD                     = 0;
-    static const int ALSO                    = 1;
-    static const int AND                     = 2;
-    static const int ASSIGN                  = 3;
-    static const int BLANK                   = 4;
-    static const int COBEGIN                 = 5;
-    static const int CONSTANT                = 6;
-    static const int CONSTRUCT               = 7;
-//  static const int DIFFERENCE              = 8;
-    static const int DIVIDE                  = 9;
-    static const int DO                      = 10;
-    static const int ELSE                    = 11;
-    static const int ENDCODE                 = 12;
-    static const int ENDIF                   = 13;
-    static const int ENDLIB                  = 14;
-    static const int ENDPROC                 = 15;
-    static const int ENDWHEN                 = 16;
-    static const int EQUAL                   = 17;
-    static const int ERROR                   = 18;
-    static const int FIELD                   = 19;
-//  static const int FUNCVAL                 = 20;
-    static const int GOTO                    = 21;
-    static const int GREATER                 = 22;
-//  static const int IN                      = 23;
-    static const int INDEX                   = 24;
-    static const int INSTANCE                = 25;
-//  static const int INTERSECTION            = 26;
-    static const int LESS                    = 27;
-    static const int LIBPROC                 = 28;
-    static const int MINUS                   = 29;
-    static const int MODULO                  = 30;
-    static const int MULTIPLY                = 31;
-    static const int NEWLINE                 = 32;
-    static const int NOT                     = 33;
-    static const int NOTEQUAL                = 34;
-    static const int NOTGREATER              = 35;
-    static const int NOTLESS                 = 36;
-    static const int OR                      = 37;
-    static const int PARAMARG                = 38;
-    static const int PARAMCALL               = 39;
-    static const int PARAMETER               = 40;
-    static const int PROCARG                 = 41;
-    static const int PROCCALL                = 42;
-    static const int PROCEDURE               = 43;
-    static const int PROCESS                 = 44;
-    static const int SUBTRACT                = 45;
-//  static const int UNION                   = 46;
-    static const int VALSPACE                = 47;
-    static const int VALUE                   = 48;
-    static const int VARIABLE                = 49;
-    static const int WAIT                    = 50;
-    static const int WHEN                    = 51;
-    static const int WHILE                   = 52;
-    static const int ADDR                    = 53;
-    static const int HALT                    = 54;
-    static const int OBTAIN                  = 55;
-    static const int PLACE                   = 56;
-    static const int SENSE                   = 57;
+    static const int8_t INVALID                 = -1;
+    static const uint8_t ADD                     = 0;
+    static const uint8_t ALSO                    = 1;
+    static const uint8_t AND                     = 2;
+    static const uint8_t ASSIGN                  = 3;
+    static const uint8_t BLANK                   = 4;
+    static const uint8_t COBEGIN                 = 5;
+    static const uint8_t CONSTANT                = 6;
+    static const uint8_t CONSTRUCT               = 7;
+//  static const uint8_t DIFFERENCE              = 8;
+    static const uint8_t DIVIDE                  = 9;
+    static const uint8_t DO                      = 10;
+    static const uint8_t ELSE                    = 11;
+    static const uint8_t ENDCODE                 = 12;
+    static const uint8_t ENDIF                   = 13;
+    static const uint8_t ENDLIB                  = 14;
+    static const uint8_t ENDPROC                 = 15;
+    static const uint8_t ENDWHEN                 = 16;
+    static const uint8_t EQUAL                   = 17;
+    static const uint8_t ERROR                   = 18;
+    static const uint8_t FIELD                   = 19;
+//  static const uint8_t FUNCVAL                 = 20;
+    static const uint8_t GOTO                    = 21;
+    static const uint8_t GREATER                 = 22;
+//  static const uint8_t IN                      = 23;
+    static const uint8_t INDEX                   = 24;
+    static const uint8_t INSTANCE                = 25;
+//  static const uint8_t INTERSECTION            = 26;
+    static const uint8_t LESS                    = 27;
+    static const uint8_t LIBPROC                 = 28;
+    static const uint8_t MINUS                   = 29;
+    static const uint8_t MODULO                  = 30;
+    static const uint8_t MULTIPLY                = 31;
+    static const uint8_t NEWLINE                 = 32;
+    static const uint8_t NOT                     = 33;
+    static const uint8_t NOTEQUAL                = 34;
+    static const uint8_t NOTGREATER              = 35;
+    static const uint8_t NOTLESS                 = 36;
+    static const uint8_t OR                      = 37;
+    static const uint8_t PARAMARG                = 38;
+    static const uint8_t PARAMCALL               = 39;
+    static const uint8_t PARAMETER               = 40;
+    static const uint8_t PROCARG                 = 41;
+    static const uint8_t PROCCALL                = 42;
+    static const uint8_t PROCEDURE               = 43;
+    static const uint8_t PROCESS                 = 44;
+    static const uint8_t SUBTRACT                = 45;
+//  static const uint8_t UNION                   = 46;
+    static const uint8_t VALSPACE                = 47;
+    static const uint8_t VALUE                   = 48;
+    static const uint8_t VARIABLE                = 49;
+    static const uint8_t WAIT                    = 50;
+    static const uint8_t WHEN                    = 51;
+    static const uint8_t WHILE                   = 52;
+    static const uint8_t ADDR                    = 53;
+    static const uint8_t HALT                    = 54;
+    static const uint8_t OBTAIN                  = 55;
+    static const uint8_t PLACE                   = 56;
+    static const uint8_t SENSE                   = 57;
     /** Extra */
-    static const int ELEMASSIGN              = 58;
-    static const int ELEMVALUE               = 59;
-    static const int LOCALCASE               = 60;
-    static const int LOCALSET                = 61;
-    static const int LOCALVALUE              = 62;
-    static const int LOCALVAR                = 63;
-    static const int OUTERCALL               = 64;
-    static const int OUTERCASE               = 65;
-    static const int OUTERPARAM              = 66;
-    static const int OUTERSET                = 67;
-    static const int OUTERVALUE              = 68;
-    static const int OUTERVAR                = 69;
-    static const int SETCONST                = 70;
-    static const int SINGLETON               = 71;
-    static const int STRINGCONST             = 72;
+    static const uint8_t ELEMASSIGN              = 58;
+    static const uint8_t ELEMVALUE               = 59;
+    static const uint8_t LOCALCASE               = 60;
+    static const uint8_t LOCALSET                = 61;
+    static const uint8_t LOCALVALUE              = 62;
+    static const uint8_t LOCALVAR                = 63;
+    static const uint8_t OUTERCALL               = 64;
+    static const uint8_t OUTERCASE               = 65;
+    static const uint8_t OUTERPARAM              = 66;
+    static const uint8_t OUTERSET                = 67;
+    static const uint8_t OUTERVALUE              = 68;
+    static const uint8_t OUTERVAR                = 69;
+    static const uint8_t SETCONST                = 70;
+    static const uint8_t SINGLETON               = 71;
+    static const uint8_t STRINGCONST             = 72;
 
-    static const int PUTI                    = 73;
-    static const int PUTC                    = 74;
-    static const int PUTB                    = 75;
-    static const int PUTN                    = 76;
+    static const uint8_t PUTI                    = 73;
+    static const uint8_t PUTC                    = 74;
+    static const uint8_t PUTB                    = 75;
+    static const uint8_t PUTN                    = 76;
 private:
     // temporary fields for stack evaluation
-    int v1, v2;
+    int16_t v1, v2;
 
     // kernel
-    const int MAX_KERNEL_STACK_SIZE = 100;
-    int* itsKernelStack; // stack
-    int itsKernelSP;    //  sp
+    const uint8_t MAX_KERNEL_STACK_SIZE = 100;
+    int16_t* itsKernelStack; // stack
+    int16_t itsKernelSP;    //  sp
 
     // variable stack
-    int bp;              //  base pointer
-    int sp;              //  stack pointer
+    int16_t bp;              //  base pointer
+    int16_t sp;              //  stack pointer
 
     // program
-    int ip;              //  instruction pointer
-    int pe;              //  program end
+    int16_t ip;              //  instruction pointer
+    int16_t pe;              //  program end
 
     // task
-    const int MAX_QUEUE = 10;
+    const uint8_t MAX_QUEUE = 10;
 
     Task** taskQueue;    // Task taskQueue[];
-    int taskCurrent;     // this
-    int numberOfTasks;   // tasks
+    uint8_t taskCurrent;     // this
+    uint8_t numberOfTasks;   // tasks
 
-    int taskStackTop;    // stackTop
-    int taskProgTop;     // progTop
+    uint8_t taskStackTop;    // stackTop
+    uint8_t taskProgTop;     // progTop
 
-    const int MIN_ADDRESS = 0;
-    const int MAX_ADDRESS = 100;
-    const int SPACE = (int)(' ');
-    const int INSTR_TABLE = 400;
-    const int SET_LENGTH = 0x8;
-    const int SET_LIMIT = 127;
+    const uint8_t MIN_ADDRESS = 0;
+    const uint16_t MAX_ADDRESS = 100;
+    const uint8_t SPACE = (int)(' ');
+    const uint16_t INSTR_TABLE = 400;
+    const uint8_t SET_LENGTH = 0x8;
+    const uint8_t SET_LIMIT = 127;
 
-    int* memory;
-    int lineNo;
+    int16_t* memory;
+    int16_t lineNo;
 
 public:
     Kernel() {
@@ -152,14 +148,14 @@ public:
         taskCurrent = 0;
         numberOfTasks = 1;
         taskQueue = new Task*[MAX_QUEUE];
-        for (int i = 0; i < MAX_QUEUE; i++)
+        for (int16_t i = 0; i < MAX_QUEUE; i++)
             taskQueue[i] = new Task();
 
-        itsKernelStack = new int [MAX_KERNEL_STACK_SIZE];
+        itsKernelStack = new int16_t [MAX_KERNEL_STACK_SIZE];
         itsKernelSP = 0;
 
-        memory = new int[MAX_ADDRESS];
-        for (int i = 0; i < MAX_ADDRESS; i++) // Reset all memory locations.
+        memory = new int16_t[MAX_ADDRESS];
+        for (int16_t i = 0; i < MAX_ADDRESS; i++) // Reset all memory locations.
             memory[i] = 0;
 
         pe = 1024;
@@ -169,24 +165,19 @@ public:
         lineNo = 0;
     }
 
-    void load(uint8_t *mem) {
+    void load(uint8_t* mem, uint8_t size) {
         int16_t i = ip = pe;
-
-        uint16_t size = sizeof(mem)/sizeof(mem[0]);
 
         for(uint16_t index = 0; index < size; index++){
            memory[i++] = mem[index];
         }
     }
 
-    void run(uint8_t *mem) {
-
-        load(mem);
-
+    void run() {
         int opcode = 0;
         while(true) {
             //printf("ip=%02x opcode=%d", (ip-1024), opcode);
-            switch((opcode=memory[ip++])-INSTR_TABLE) {
+            switch((opcode=memory[ip++])) {
                 case ENDPROC:           EndProc();     break;
                 case PROCEDURE:         Procedure();   break;
                 case INDEX:             Index();       break;
@@ -274,15 +265,15 @@ private:
     /** goto: op displacement */
     void Goto() {
 //t     printf("Goto\n");
-        int displacement = memory[ip];
+        int16_t displacement = memory[ip];
         ip = ip + displacement - 1;
     }
 
     /** proc: op   paramLength, varLength, tempLength, lineNo */
     void Procedure() {
-        int paramLength = memory[ip];
-        int varLength   = memory[ip+1];
-        int tempLength  = memory[ip+2];
+        int16_t paramLength = memory[ip];
+        int16_t varLength   = memory[ip+1];
+        int16_t tempLength  = memory[ip+2];
         lineNo          = memory[ip+3];
 
 //t     printf("Procedure: sp = %u\n", sp);
@@ -323,8 +314,8 @@ private:
         *           ----------------------
         */
     void Instance() {
-        int steps = memory[ip];
-        int link = bp;
+        int16_t steps = memory[ip];
+        int16_t link = bp;
         for (int i=steps; i>0; i--) {
             link = memory[link];
         }
@@ -349,7 +340,7 @@ private:
         *           ---------------------
         */
     void Variable() {
-        int displ = memory[ip];
+        int16_t displ = memory[ip];
         memory[sp] = memory[sp] + displ;
         ip = ip + 1;
     }
@@ -381,9 +372,9 @@ private:
         *             m = SET_LENGTH - 1
         */
     void Construct() {
-        int number = memory[ip];
-        int elem,index,i,val;
-        int* tempSet = new int[SET_LENGTH];
+        int16_t number = memory[ip];
+        int16_t elem,index,i,val;
+        int16_t* tempSet = new int16_t[SET_LENGTH];
 
 //t     printf("Set number = %d\n", number);
         for (i = 0; i<SET_LENGTH; i++)
@@ -398,7 +389,7 @@ private:
                 tempSet[index] |= (1<<val);
             }
             else
-                PutS("Error: element has the value outside set range\n");
+                printf("Error: element has the value outside set range\n");
         }
         sp = sp - number + 1;
         for (i=0; i<SET_LENGTH ; i++) {
@@ -425,7 +416,7 @@ private:
         *           ---------------------
         */
     void Constant() {
-        int value = memory[ip];
+        int16_t value = memory[ip];
         sp = sp + 1;
         memory[sp] = value;
         ip = ip + 1;
@@ -453,10 +444,10 @@ private:
         *             n = length-1
         */
     void Value() {
-        int length = memory[ip];
-        int varAdd = memory[sp];
+        int16_t length = memory[ip];
+        int16_t varAdd = memory[sp];
 
-        for (int i=0; i<length; i++) {
+        for (int16_t i=0; i<length; i++) {
             memory[sp+i] = memory[varAdd+i];
         }
         sp = sp + length - 1;
@@ -485,7 +476,7 @@ private:
         *               n = length
         */
     void ValSpace() {
-        int length = memory[ip];
+        int16_t length = memory[ip];
         sp = sp + length;
         ip = ip + 1;
     }
@@ -598,12 +589,12 @@ private:
         *           n = length - 1
         */
         void Equal() {
-            int length = memory[ip];
-            int y = sp - length + 1;
-            int x = y - length;
+            int16_t length = memory[ip];
+            int16_t y = sp - length + 1;
+            int16_t x = y - length;
             sp = x;
             bool equal = true;
-            for (int i=0; i<length; i++) {
+            for (int16_t i=0; i<length; i++) {
                 if(memory[x+i] != memory[y+i]) {
                     equal = false;
                     break;
@@ -658,13 +649,13 @@ private:
         *           n = length - 1
         */
         void NotEqual() {
-            int length = memory[ip];
-            int y = sp - length + 1;
-            int x = sp - length;
+            int16_t length = memory[ip];
+            int16_t y = sp - length + 1;
+            int16_t x = sp - length;
             sp = x;
 
             memory[sp] = 0;
-            for (int i=0; i<length; i++) {
+            for (int16_t i=0; i<length; i++) {
                 if(memory[x+i] != memory[y+i]) {
                     memory[sp] = 1;
                     break;
@@ -740,11 +731,11 @@ private:
         *               n = length
         */
         void Assign() {
-            int length = memory[ip];
+            int16_t length = memory[ip];
             sp = sp - length - 1;
-            int x = memory[sp + 1];
-            int y = sp + 2;
-            for (int i=0; i<length; i++) {
+            int16_t x = memory[sp + 1];
+            int16_t y = sp + 2;
+            for (int16_t i=0; i<length; i++) {
                 memory[x+i] = memory[y+i];
             }
             ip = ip + 1;
@@ -794,7 +785,7 @@ private:
         */
 
         void ProcCall() {
-            int displacement = memory[ip];
+            int16_t displacement = memory[ip];
 //t         printStack();
 
             memory[sp + 1] = bp;
@@ -807,7 +798,7 @@ private:
         }
 
         void ProcArg() {
-           int displacement = memory[ip++];
+           int16_t displacement = memory[ip++];
 //t        printStack();
            memory[++sp] = displacement;
 //t        printStack();
@@ -815,9 +806,9 @@ private:
 
     void ParamCall() {
 //t        printStack();
-        int displacement = memory[ip];
-        int addr = memory[sp] + displacement;
-        int dest = memory[addr + 1];
+        int16_t displacement = memory[ip];
+        int16_t addr = memory[sp] + displacement;
+        int16_t dest = memory[addr + 1];
 
 //t        printStack();
 
@@ -857,7 +848,7 @@ private:
         *           --------------------------
         */
         void Do() {
-            int displacement = memory[ip];
+            int16_t displacement = memory[ip];
             if (memory[sp] == 1)
                 ip++;
             else
@@ -874,7 +865,7 @@ private:
         *           --------------------------
         */
         void Else() {
-            int displacement = memory[ip];
+            int16_t displacement = memory[ip];
             ip = ip + displacement - 1;
         }
 
@@ -905,7 +896,7 @@ private:
         *           --------------------------
         */
         void Wait() {
-            int displacement = memory[ip];
+            int16_t displacement = memory[ip];
             ip = ip + displacement - 1;
             preempt();
             if (taskCurrent >= (numberOfTasks-1))
@@ -940,7 +931,7 @@ private:
         *           --------------------------
         */
         void Process() {
-            int tempLength = memory[ip];
+            int16_t tempLength = memory[ip];
             lineNo = memory[ip+1];
 
             if ((sp + tempLength) > pe) {
@@ -958,7 +949,7 @@ private:
         *           --------------------------
         */
         void Also() {
-            int displacement = memory[ip];
+            int16_t displacement = memory[ip];
             if (numberOfTasks > 1) {
                 while (taskCurrent < (numberOfTasks-1)) {
                     taskQueue[taskCurrent] = taskQueue[taskCurrent+1];
@@ -1004,8 +995,8 @@ private:
         *           --------------------------
         */
         void Cobegin() {
-            int numOfTask = memory[ip];
-            lineNo= memory[ip+1];
+            int16_t numOfTask = memory[ip];
+            lineNo = memory[ip+1];
 
             numberOfTasks = numOfTask;
             if (numberOfTasks > MAX_QUEUE)
@@ -1013,8 +1004,8 @@ private:
             taskStackTop = sp;
             taskProgTop = pe;
 
-            int length = (pe-sp)/numOfTask;
-            for (int i=0; i<numOfTask;i++) {
+            int16_t length = (pe-sp)/numOfTask;
+            for (int16_t i=0; i<numOfTask;i++) {
                 pe = sp + length;
                 taskQueue[i] = new Task();
                 taskQueue[i]->sp = sp;
@@ -1055,11 +1046,11 @@ private:
         *           ------------------
         */
     void Index() {
-        int index;
+        int16_t index;
 
-        int lower  = memory[ip];
-        int upper  = memory[ip+1];
-        int length = memory[ip+2];
+        int16_t lower  = memory[ip];
+        int16_t upper  = memory[ip+1];
+        int16_t length = memory[ip+2];
 
         lineNo  = memory[ip+3];
 
@@ -1097,13 +1088,13 @@ private:
         *
         */
     void Field() {
-        int displ = memory[ip];
+        int16_t displ = memory[ip];
         memory[sp] = memory[sp] + displ;
         ip = ip + 1;
     }
     //------------------------------------------- Extras
     void PutInteger() {
-        char integer[50];
+        char integer[8];
         sprintf(integer, "%d", memory[sp]);
         PutS(integer);
         sp = sp - 1;
@@ -1135,4 +1126,3 @@ void VM_Init() {
 void VM_execute(uint8_t* mem) {
         kernel->run(mem);
 }
-
