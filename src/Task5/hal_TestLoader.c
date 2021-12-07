@@ -27,7 +27,7 @@ DisplayBanner()
     PutN();
 }
 
-#define MemMax 36
+#define MemMax 256
 
 static uint8_t mem[MemMax];
 
@@ -39,13 +39,11 @@ int main()
     while (true)
     {
         uint8_t status = Success;
-
         if ((status = hal_Loader(mem)) == Success)
         {
             DisplayBanner();
-            VM_Init(mem);
+            VM_Init();
             VM_execute(mem);
-            //kernel->run(mem);
 
             // Send an Ack to tell the Host that program's execution is done.
             PutC((char)Ack);

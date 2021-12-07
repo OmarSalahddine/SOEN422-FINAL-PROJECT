@@ -135,7 +135,7 @@ private:
     const int MIN_ADDRESS = 0;
     const int MAX_ADDRESS = 100;
     const int SPACE = (int)(' ');
-    const int INSTR_TABLE = 400;
+    const int INSTR_TABLE = 0;
     const int SET_LENGTH = 0x8;
     const int SET_LIMIT = 127;
 
@@ -170,19 +170,18 @@ public:
     }
 
     void load(uint8_t *mem) {
-        int16_t i = ip = pe;
+        int8_t i = ip = pe;
 
-        uint16_t size = sizeof(mem)/sizeof(mem[0]);
+        uint8_t size = mem[0];
 
-        for(uint16_t index = 0; index < size; index++){
-           memory[i++] = mem[index];
-        }
+        for(uint8_t index = 1; index < size; index++){
+           memory[i++] = mem[index];}
+        
     }
 
     void run(uint8_t *mem) {
 
         load(mem);
-
         int opcode = 0;
         while(true) {
             //printf("ip=%02x opcode=%d", (ip-1024), opcode);
@@ -1126,7 +1125,6 @@ private:
 };
 
 Kernel* kernel;
-
 void VM_Init() {
         bsl_Uart_Init();
         kernel = new Kernel();
@@ -1134,5 +1132,6 @@ void VM_Init() {
 
 void VM_execute(uint8_t* mem) {
         kernel->run(mem);
+
 }
 
