@@ -1,11 +1,9 @@
 // hal_TestLoader.c - Test Loader implementation for HAL using bsl_Uart.c
 
+#include "COutForAUnit.h"
 #include "bsl_Uart.h"
 #include "hal_Loader.h"
-#include "vm.h"
 #include <stdbool.h>
-
-//...
 
 #define Target "(ATMega328P)"
 #define VMName "Small Edison Virtual Machine "
@@ -14,10 +12,7 @@
 #define Version " v1.0 "
 #define Copyright "Copyright (c) 2021  Michel de Champlain"
 
-// Banner = VMname AppSuffix Version Copyright
-static void
-DisplayBanner()
-{
+static void DisplayBanner(){
     PutS(VMName);
     PutS(AppSuffix);
     PutS(Version);
